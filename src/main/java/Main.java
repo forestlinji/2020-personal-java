@@ -42,7 +42,71 @@ public class Main {
     }
 
     private static void init(String path) throws IOException {
+//        long start = System.currentTimeMillis();
+//        Thread.sleep(10 * 1000);
+        System.out.println("start");
+        LineIterator it = FileUtils.lineIterator(new File(path), "UTF-8");
+        try {
+            while (it.hasNext()) {
+                String line = it.nextLine();
+                JSONObject jsonObject = JSONObject.parseObject(line);
+                String type = jsonObject.getString("type");
 
+                if (Attention(type)) {
+                    UserRepo userRepo = new UserRepo();
+                    userRepo.setUser(jsonObject.getJSONObject("actor").getString("login"));
+                    userRepo.setRepo(jsonObject.getJSONObject("repo").getString("name"));
+                    Result user = map1.getOrDefault(userRepo.getUser(), new Result());
+                    Result repo = map2.getOrDefault(userRepo.getUser(), new Result());
+                    Result userr = map3.getOrDefault(userRepo.toString(), new Result());
+                    switch (type) {
+                        case "PushEvent":
+                            user.pushEvent++;
+                            repo.pushEvent++;
+                            userr.pushEvent++;
+                            break;
+                        case "IssueCommentEvent":
+                            user.issueCommentEvent++;
+                            repo.issueCommentEvent++;
+                            userr.issueCommentEvent++;
+                            break;
+                        case "IssuesEvent":
+                            user.issuesEvent++;
+                            repo.issuesEvent++;
+                            userr.issuesEvent++;
+                            break;
+                        case "pullRequestEvent":
+                            user.pullRequestEvent++;
+                            repo.pullRequestEvent++;
+                            userr.pullRequestEvent++;
+                            break;
+
+                    }
+                    map1.put(userRepo.getUser(), user);
+                    map2.put(userRepo.getRepo(), repo);
+                    map3.put(userRepo.toString(), userr);
+                }
+                // do something with line
+            }
+            System.out.println(map1.keySet().size());
+            System.out.println(map2.keySet().size());
+            System.out.println(map3.keySet().size());
+        } finally {
+            LineIterator.closeQuietly(it);
+        }
+        String s1 = JSONObject.toJSONString(map1);
+        String s2 = JSONObject.toJSONString(map2);
+        String s3 = JSONObject.toJSONString(map3);
+        FileUtils.writeStringToFile(new File("out1.json"), s1, "UTF-8");
+        FileUtils.writeStringToFile(new File("out2.json"), s2, "UTF-8");
+        FileUtils.writeStringToFile(new File("out3.json"), s3, "UTF-8");
+//        long end = System.currentTimeMillis();
+//        System.out.println(end - start);
+//        try {
+//            Thread.sleep(100000000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private static void countByUserAndRepo(String user, String repo, String event) {
@@ -52,10 +116,18 @@ public class Main {
     private static void countByUser(String user, String event) {}
 
     private static boolean Attention(String type){
-        return type.equals("PushEvent")
-                || type.equals("IssueCommentEvent")
-                || type.equals("IssuesEvent")
-                || type.equals("PullRequestEvent");
+//        return type.equals("PushEvent")
+//                || type.equals("IssueCommentEvent")
+//                || type.equals("IssuesEvent")
+//                || type.equals("PullRequestEvent");
+        switch (type){
+            case "PushEvent":
+            case "IssueCommentEvent":
+            case "IssuesEvent":
+            case "pullRequestEvent":
+                return true;
+            default:
+                return false;
     }
 
 }

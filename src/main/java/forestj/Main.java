@@ -44,9 +44,9 @@ public class Main {
 
 
     private static void init(String path) throws IOException {
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
 //        Thread.sleep(10 * 1000);
-        System.out.println("start");
+//        System.out.println("start");
 //        LineIterator it = FileUtils.lineIterator(new File(path), "UTF-8");
         // 获取指定目录下后缀是.json的文件
         File Dir = new File(path);
@@ -103,19 +103,16 @@ public class Main {
 //        System.out.println(map1.keySet().size());
 //        System.out.println(map2.keySet().size());
 //        System.out.println(map3.keySet().size());
-        System.out.println(map1.keySet().size());
-        System.out.println(map2.keySet().size());
-        System.out.println(map3.keySet().size());
         String s1 = JSONObject.toJSONString(map1);
-        System.out.println(s1.substring(1, 1000));
+//        System.out.println(s1.substring(1, 1000));
         String s2 = JSONObject.toJSONString(map2);
         String s3 = JSONObject.toJSONString(map3);
         // 将json写入文件
         FileUtils.writeStringToFile(new File("out1.json"), s1, "UTF-8");
         FileUtils.writeStringToFile(new File("out2.json"), s2, "UTF-8");
         FileUtils.writeStringToFile(new File("out3.json"), s3, "UTF-8");
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
+//        long end = System.currentTimeMillis();
+//        System.out.println(end - start);
     }
 
 

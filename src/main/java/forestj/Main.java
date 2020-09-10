@@ -54,7 +54,7 @@ public class Main {
                     JSONObject jsonObject = JSONObject.parseObject(line);
                     String type = jsonObject.getString("type");
 
-                    if (Attention(type)) {
+                    if (attention(type)) {
                         UserRepo userRepo = new UserRepo();
                         userRepo.setUser(jsonObject.getJSONObject("actor").getString("login"));
                         userRepo.setRepo(jsonObject.getJSONObject("repo").getString("name"));
@@ -101,7 +101,7 @@ public class Main {
         System.out.println(map2.keySet().size());
         System.out.println(map3.keySet().size());
         String s1 = JSONObject.toJSONString(map1);
-        System.out.println(s1.substring(1,1000));
+        System.out.println(s1.substring(1, 1000));
         String s2 = JSONObject.toJSONString(map2);
         String s3 = JSONObject.toJSONString(map3);
         FileUtils.writeStringToFile(new File("out1.json"), s1, "UTF-8");
@@ -138,7 +138,7 @@ public class Main {
     }
 
 
-    private static boolean Attention(String type) {
+    private static boolean attention(String type) {
         switch (type) {
             case "PushEvent":
             case "IssueCommentEvent":

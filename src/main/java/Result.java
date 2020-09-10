@@ -1,5 +1,3 @@
-package forestj;
-
 /**
  * 统计四种事件的数量
  */

@@ -1,9 +1,6 @@
-import forestj.Main;
-import forestj.UserRepo;
 import org.apache.commons.cli.ParseException;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 
 public class TestMain {

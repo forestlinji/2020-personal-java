@@ -1,5 +1,3 @@
-package forestj;
-
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;

@@ -1,5 +1,3 @@
-package forestj;
-
 import java.util.Objects;
 
 /**

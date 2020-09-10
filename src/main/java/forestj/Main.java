@@ -12,9 +12,9 @@ import java.util.Map;
 
 
 public class Main {
-    static Map<String, Result> map1 = new HashMap<String, Result>(); //user
-    static Map<String, Result> map2 = new HashMap<String, Result>(); //repo
-    static Map<String, Result> map3 = new HashMap<String, Result>();
+    static Map<String, Result> map1 = new HashMap<String, Result>(); //存放user
+    static Map<String, Result> map2 = new HashMap<String, Result>(); //存放repo
+    static Map<String, Result> map3 = new HashMap<String, Result>(); //存放userRepo
 
 
     public static void main(String[] args) throws ParseException, IOException {
@@ -28,12 +28,16 @@ public class Main {
         options.addOption("r", "repo", true, "repo");
         CommandLine commandLine = parser.parse(options, args);
         if (commandLine.hasOption("i")) {
+            // 初始化事件
             init(commandLine.getOptionValue("i"));
         } else if (commandLine.hasOption("u") && commandLine.hasOption("e") && commandLine.hasOption("repo")) {
+            // 查询每一个人在每一个项目的 4 种事件的数量。
             countByUserAndRepo(commandLine.getOptionValue("u"), commandLine.getOptionValue("repo"), commandLine.getOptionValue("e"));
         } else if (commandLine.hasOption("u") && commandLine.hasOption("e")) {
+            // 查询个人的 4 种事件的数量。
             countByUser(commandLine.getOptionValue("u"), commandLine.getOptionValue("e"));
         } else if (commandLine.hasOption("r") && commandLine.hasOption("e")) {
+            // 查询每一个项目的 4 种事件的数量
             countByRepo(commandLine.getOptionValue("r"), commandLine.getOptionValue("e"));
         }
     }
@@ -44,9 +48,11 @@ public class Main {
 //        Thread.sleep(10 * 1000);
         System.out.println("start");
 //        LineIterator it = FileUtils.lineIterator(new File(path), "UTF-8");
+        // 获取指定目录下后缀是.json的文件
         File Dir = new File(path);
         File[] files = Dir.listFiles(file -> file.getName().endsWith(".json"));
         for (File file : files) {
+            // 使用流读取防止 OOM
             LineIterator it = FileUtils.lineIterator(file, "UTF-8");
             try {
                 while (it.hasNext()) {
@@ -104,6 +110,7 @@ public class Main {
         System.out.println(s1.substring(1, 1000));
         String s2 = JSONObject.toJSONString(map2);
         String s3 = JSONObject.toJSONString(map3);
+        // 将json写入文件
         FileUtils.writeStringToFile(new File("out1.json"), s1, "UTF-8");
         FileUtils.writeStringToFile(new File("out2.json"), s2, "UTF-8");
         FileUtils.writeStringToFile(new File("out3.json"), s3, "UTF-8");
@@ -112,6 +119,13 @@ public class Main {
     }
 
 
+    /**
+     * 查询每一个人在每一个项目的 4 种事件的数量。
+     * @param user 用户名
+     * @param repo 仓库名
+     * @param event 事件类型
+     * @throws IOException
+     */
     private static void countByUserAndRepo(String user, String repo, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out3.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
@@ -121,6 +135,12 @@ public class Main {
     }
 
 
+    /**
+     * 查询个人的 4 种事件的数量。
+     * @param user 用户名
+     * @param event 事件类型
+     * @throws IOException
+     */
     private static void countByUser(String user, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out1.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
@@ -130,6 +150,12 @@ public class Main {
     }
 
 
+    /**
+     * 查询每一个项目的 4 种事件的数量。
+     * @param repo 仓库名
+     * @param event 事件类型
+     * @throws IOException
+     */
     private static void countByRepo(String repo, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out2.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
@@ -138,6 +164,11 @@ public class Main {
     }
 
 
+    /**
+     * 判断给定的事件是否是指定的事件类型
+     * @param type 事件类型
+     * @return
+     */
     private static boolean attention(String type) {
         switch (type) {
             case "PushEvent":

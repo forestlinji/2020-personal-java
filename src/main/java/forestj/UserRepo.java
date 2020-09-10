@@ -1,5 +1,10 @@
+package forestj;
+
 import java.util.Objects;
 
+/**
+ * 作为查询每一个人在每一个项目的 4 种事件的数量的key
+ */
 public class UserRepo {
     private String user;
     private String repo;

@@ -41,7 +41,7 @@ public class Main {
             int result = countByRepo(commandLine.getOptionValue("r"), commandLine.getOptionValue("e"));
             System.out.println(result);
         } else {
-            throw new Exception("参数不合法");
+//            throw new Exception("参数不合法");
         }
     }
 

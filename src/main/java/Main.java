@@ -15,7 +15,7 @@ public class Main {
     static Map<String, Result> map3 = new HashMap<String, Result>(); //存放userRepo
 
 
-    public static void main(String[] args) throws ParseException, IOException {
+    public static void main(String[] args) throws Exception {
 //        System.out.println("Hello World");
 //        System.out.println(args.length);
         CommandLineParser parser = new BasicParser();
@@ -40,7 +40,8 @@ public class Main {
             // 查询每一个项目的 4 种事件的数量
             int result = countByRepo(commandLine.getOptionValue("r"), commandLine.getOptionValue("e"));
             System.out.println(result);
-
+        } else {
+            throw new Exception("参数不合法");
         }
     }
 
@@ -48,8 +49,6 @@ public class Main {
     private static void init(String path) throws IOException {
 //        long start = System.currentTimeMillis();
 //        Thread.sleep(10 * 1000);
-//        System.out.println("start");
-//        LineIterator it = FileUtils.lineIterator(new File(path), "UTF-8");
         // 获取指定目录下后缀是.json的文件
         File Dir = new File(path);
         File[] files = Dir.listFiles(file -> file.getName().endsWith(".json"));
@@ -64,6 +63,7 @@ public class Main {
 
                     if (attention(type)) {
 //                        UserRepo userRepo = new UserRepo();
+                        //解析json
                         String userStr = jsonObject.getJSONObject("actor").getString("login");
                         String repoStr = jsonObject.getJSONObject("repo").getString("name");
 //                        userRepo.setUser(jsonObject.getJSONObject("actor").getString("login"));
@@ -71,6 +71,7 @@ public class Main {
                         Result user = map1.getOrDefault(userStr, new Result());
                         Result repo = map2.getOrDefault(repoStr, new Result());
                         Result userAndRepo = map3.getOrDefault(userStr + "_" + repoStr, new Result());
+                        // 更新统计数据
                         switch (type) {
                             case "PushEvent":
                                 user.PushEvent++;
@@ -93,6 +94,7 @@ public class Main {
                                 userAndRepo.PullRequestEvent++;
                                 break;
                         }
+                        // 放回map
                         map1.putIfAbsent(userStr, user);
                         map2.putIfAbsent(repoStr, repo);
                         map3.putIfAbsent(userStr + "_" + repoStr, userAndRepo);
@@ -104,11 +106,8 @@ public class Main {
                 LineIterator.closeQuietly(it);
             }
         }
-//        System.out.println(map1.keySet().size());
-//        System.out.println(map2.keySet().size());
-//        System.out.println(map3.keySet().size());
+        // 将map转为json
         String s1 = JSONObject.toJSONString(map1);
-//        System.out.println(s1.substring(1, 1000));
         String s2 = JSONObject.toJSONString(map2);
         String s3 = JSONObject.toJSONString(map3);
         // 将json写入文件
@@ -122,8 +121,9 @@ public class Main {
 
     /**
      * 查询每一个人在每一个项目的 4 种事件的数量。
-     * @param user 用户名
-     * @param repo 仓库名
+     *
+     * @param user  用户名
+     * @param repo  仓库名
      * @param event 事件类型
      * @throws IOException
      */
@@ -131,9 +131,9 @@ public class Main {
         String s = FileUtils.readFileToString(new File("out3.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(user + "_" + repo);
-        if(object != null){
+        if (object != null) {
             return object.getInteger(event);
-        }else {
+        } else {
             return 0;
         }
     }
@@ -141,7 +141,8 @@ public class Main {
 
     /**
      * 查询个人的 4 种事件的数量。
-     * @param user 用户名
+     *
+     * @param user  用户名
      * @param event 事件类型
      * @throws IOException
      */
@@ -149,9 +150,9 @@ public class Main {
         String s = FileUtils.readFileToString(new File("out1.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(user);
-        if(object != null){
+        if (object != null) {
             return object.getInteger(event);
-        }else {
+        } else {
             return 0;
         }
 
@@ -160,7 +161,8 @@ public class Main {
 
     /**
      * 查询每一个项目的 4 种事件的数量。
-     * @param repo 仓库名
+     *
+     * @param repo  仓库名
      * @param event 事件类型
      * @throws IOException
      */
@@ -168,9 +170,9 @@ public class Main {
         String s = FileUtils.readFileToString(new File("out2.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(repo);
-        if(object != null){
+        if (object != null) {
             return object.getInteger(event);
-        }else {
+        } else {
             return 0;
         }
     }
@@ -178,6 +180,7 @@ public class Main {
 
     /**
      * 判断给定的事件是否是指定的事件类型
+     *
      * @param type 事件类型
      * @return
      */

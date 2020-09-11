@@ -24,13 +24,13 @@ public class TestMain {
 
     @Test
     public void testCountByUser() throws IOException, ParseException {
-        Main.main(new String[]{"-r", "MizzleDK/Mizuu", "-e", "IssueCommentEvent"});
+        Main.main(new String[]{"-u", "kamilsk", "-e", "PushEvent"});
     }
 
 
     @Test
     public void testCountByRepo() throws IOException, ParseException {
-        Main.main(new String[]{"-r", "fujimura", "-e", "PushEvent"});
+        Main.main(new String[]{"-r", "fujimura/hi", "-e", "PushEvent"});
     }
 
 

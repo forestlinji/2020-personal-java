@@ -30,13 +30,17 @@ public class Main {
             init(commandLine.getOptionValue("i"));
         } else if (commandLine.hasOption("u") && commandLine.hasOption("e") && commandLine.hasOption("repo")) {
             // 查询每一个人在每一个项目的 4 种事件的数量。
-            countByUserAndRepo(commandLine.getOptionValue("u"), commandLine.getOptionValue("repo"), commandLine.getOptionValue("e"));
+            int result = countByUserAndRepo(commandLine.getOptionValue("u"), commandLine.getOptionValue("repo"), commandLine.getOptionValue("e"));
+            System.out.println(result);
         } else if (commandLine.hasOption("u") && commandLine.hasOption("e")) {
             // 查询个人的 4 种事件的数量。
-            countByUser(commandLine.getOptionValue("u"), commandLine.getOptionValue("e"));
+            int result = countByUser(commandLine.getOptionValue("u"), commandLine.getOptionValue("e"));
+            System.out.println(result);
         } else if (commandLine.hasOption("r") && commandLine.hasOption("e")) {
             // 查询每一个项目的 4 种事件的数量
-            countByRepo(commandLine.getOptionValue("r"), commandLine.getOptionValue("e"));
+            int result = countByRepo(commandLine.getOptionValue("r"), commandLine.getOptionValue("e"));
+            System.out.println(result);
+
         }
     }
 
@@ -59,12 +63,14 @@ public class Main {
                     String type = jsonObject.getString("type");
 
                     if (attention(type)) {
-                        UserRepo userRepo = new UserRepo();
-                        userRepo.setUser(jsonObject.getJSONObject("actor").getString("login"));
-                        userRepo.setRepo(jsonObject.getJSONObject("repo").getString("name"));
-                        Result user = map1.getOrDefault(userRepo.getUser(), new Result());
-                        Result repo = map2.getOrDefault(userRepo.getRepo(), new Result());
-                        Result userAndRepo = map3.getOrDefault(userRepo.toString(), new Result());
+//                        UserRepo userRepo = new UserRepo();
+                        String userStr = jsonObject.getJSONObject("actor").getString("login");
+                        String repoStr = jsonObject.getJSONObject("repo").getString("name");
+//                        userRepo.setUser(jsonObject.getJSONObject("actor").getString("login"));
+//                        userRepo.setRepo(jsonObject.getJSONObject("repo").getString("name"));
+                        Result user = map1.getOrDefault(userStr, new Result());
+                        Result repo = map2.getOrDefault(repoStr, new Result());
+                        Result userAndRepo = map3.getOrDefault(userStr + "_" + repoStr, new Result());
                         switch (type) {
                             case "PushEvent":
                                 user.PushEvent++;
@@ -87,9 +93,9 @@ public class Main {
                                 userAndRepo.PullRequestEvent++;
                                 break;
                         }
-                        map1.put(userRepo.getUser(), user);
-                        map2.put(userRepo.getRepo(), repo);
-                        map3.put(userRepo.toString(), userAndRepo);
+                        map1.putIfAbsent(userStr, user);
+                        map2.putIfAbsent(repoStr, repo);
+                        map3.putIfAbsent(userStr + "_" + repoStr, userAndRepo);
                     }
                     // do something with line
                 }
@@ -121,12 +127,15 @@ public class Main {
      * @param event 事件类型
      * @throws IOException
      */
-    private static void countByUserAndRepo(String user, String repo, String event) throws IOException {
+    private static int countByUserAndRepo(String user, String repo, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out3.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
-        Integer result = jsonObject.getJSONObject(new UserRepo(user, repo).toString()).getInteger(event);
-        System.out.println(result);
-
+        JSONObject object = jsonObject.getJSONObject(user + "_" + repo);
+        if(object != null){
+            return object.getInteger(event);
+        }else {
+            return 0;
+        }
     }
 
 
@@ -136,11 +145,15 @@ public class Main {
      * @param event 事件类型
      * @throws IOException
      */
-    private static void countByUser(String user, String event) throws IOException {
+    private static int countByUser(String user, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out1.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
-        Integer result = jsonObject.getJSONObject(user).getInteger(event);
-        System.out.println(result);
+        JSONObject object = jsonObject.getJSONObject(user);
+        if(object != null){
+            return object.getInteger(event);
+        }else {
+            return 0;
+        }
 
     }
 
@@ -151,11 +164,15 @@ public class Main {
      * @param event 事件类型
      * @throws IOException
      */
-    private static void countByRepo(String repo, String event) throws IOException {
+    private static int countByRepo(String repo, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out2.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
-        Integer result = jsonObject.getJSONObject(repo).getInteger(event);
-        System.out.println(result);
+        JSONObject object = jsonObject.getJSONObject(repo);
+        if(object != null){
+            return object.getInteger(event);
+        }else {
+            return 0;
+        }
     }
 
 

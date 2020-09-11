@@ -87,7 +87,7 @@ public class Main {
                                 repo.IssuesEvent++;
                                 userAndRepo.IssuesEvent++;
                                 break;
-                            case "pullRequestEvent":
+                            case "PullRequestEvent":
                                 user.PullRequestEvent++;
                                 repo.PullRequestEvent++;
                                 userAndRepo.PullRequestEvent++;
@@ -186,7 +186,7 @@ public class Main {
             case "PushEvent":
             case "IssueCommentEvent":
             case "IssuesEvent":
-            case "pullRequestEvent":
+            case "PullRequestEvent":
                 return true;
             default:
                 return false;

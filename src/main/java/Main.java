@@ -42,6 +42,7 @@ public class Main {
             System.out.println(result);
         } else {
 //            throw new Exception("参数不合法");
+            System.out.println(Runtime.getRuntime().maxMemory() / 1024 / 1024);
         }
     }
 

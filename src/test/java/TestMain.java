@@ -1,7 +1,10 @@
 import org.apache.commons.cli.ParseException;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 public class TestMain {
 
@@ -61,5 +64,16 @@ public class TestMain {
         Main.main(new String[]{"-u", "tschortsch", "-e", "PushEvent", "--repo", "tschortsch/gulp-bootlint"});
         Main.main(new String[]{"-u", "tschortsfasfch", "-e", "PushEvent", "--repo", "tschortsch/gulp-bootlint"});
 //        UserRepo {user='tschortsch', repo='tschortsch/gulp-bootlint'}":{"IssueCommentEvent":0,"IssuesEvent":0,"PullRequestEvent":0,"PushEvent":7}
+    }
+
+    @Test(expected = FileNotFoundException.class)
+    public void testFileHandler(){
+        new FileHandler(new File("geag"), new CountDownLatch(1)).run();
+    }
+
+    @Test(expected = Exception.class)
+    public void testPara() throws Exception {
+        Main.main(new String[]{"-e", "tschortsch"});
+
     }
 }

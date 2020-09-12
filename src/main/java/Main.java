@@ -1,4 +1,5 @@
 import com.alibaba.fastjson.JSONObject;
+import factory.ThreadPoolFactory;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -7,12 +8,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class Main {
-    static Map<String, Result> map1 = new HashMap<String, Result>(); //存放user
-    static Map<String, Result> map2 = new HashMap<String, Result>(); //存放repo
-    static Map<String, Result> map3 = new HashMap<String, Result>(); //存放userRepo
+    static Map<String, Result> map1 = new ConcurrentHashMap<>(); //存放user
+    static Map<String, Result> map2 = new ConcurrentHashMap<>(); //存放repo
+    static Map<String, Result> map3 = new ConcurrentHashMap<>(); //存放userRepo
 
 
     public static void main(String[] args) throws Exception {
@@ -47,67 +51,19 @@ public class Main {
     }
 
 
-    private static void init(String path) throws IOException {
+    private static void init(String path) throws IOException, InterruptedException {
         long start = System.currentTimeMillis();
-//        Thread.sleep(10 * 1000);
-        // 获取指定目录下后缀是.json的文件
         File Dir = new File(path);
+//        获取后缀是json格式的文件列表
         File[] files = Dir.listFiles(file -> file.getName().endsWith(".json"));
+        ThreadPoolExecutor pool = ThreadPoolFactory.getPool();
+        CountDownLatch countDownLatch = new CountDownLatch(files.length);
         for (File file : files) {
-            // 使用流读取防止 OOM
-            LineIterator it = FileUtils.lineIterator(file, "UTF-8");
-            try {
-                while (it.hasNext()) {
-                    String line = it.nextLine();
-                    JSONObject jsonObject = JSONObject.parseObject(line);
-                    String type = jsonObject.getString("type");
-
-                    if (attention(type)) {
-//                        UserRepo userRepo = new UserRepo();
-                        //解析json
-                        String userStr = jsonObject.getJSONObject("actor").getString("login");
-                        String repoStr = jsonObject.getJSONObject("repo").getString("name");
-//                        userRepo.setUser(jsonObject.getJSONObject("actor").getString("login"));
-//                        userRepo.setRepo(jsonObject.getJSONObject("repo").getString("name"));
-                        Result user = map1.getOrDefault(userStr, new Result());
-                        Result repo = map2.getOrDefault(repoStr, new Result());
-                        Result userAndRepo = map3.getOrDefault(userStr + "_" + repoStr, new Result());
-                        // 更新统计数据
-                        switch (type) {
-                            case "PushEvent":
-                                user.PushEvent++;
-                                repo.PushEvent++;
-                                userAndRepo.PushEvent++;
-                                break;
-                            case "IssueCommentEvent":
-                                user.IssueCommentEvent++;
-                                repo.IssueCommentEvent++;
-                                userAndRepo.IssueCommentEvent++;
-                                break;
-                            case "IssuesEvent":
-                                user.IssuesEvent++;
-                                repo.IssuesEvent++;
-                                userAndRepo.IssuesEvent++;
-                                break;
-                            case "PullRequestEvent":
-                                user.PullRequestEvent++;
-                                repo.PullRequestEvent++;
-                                userAndRepo.PullRequestEvent++;
-                                break;
-                        }
-                        // 放回map
-                        map1.putIfAbsent(userStr, user);
-                        map2.putIfAbsent(repoStr, repo);
-                        map3.putIfAbsent(userStr + "_" + repoStr, userAndRepo);
-                    }
-                    // do something with line
-                }
-
-            } finally {
-                LineIterator.closeQuietly(it);
-            }
+            pool.execute(new FileHandler(file, countDownLatch));
         }
-        // 将map转为json
+//        利用 CountDownLatch 实现线程同步
+        countDownLatch.await();
+
         String s1 = JSONObject.toJSONString(map1);
         String s2 = JSONObject.toJSONString(map2);
         String s3 = JSONObject.toJSONString(map3);
@@ -185,7 +141,7 @@ public class Main {
      * @param type 事件类型
      * @return
      */
-    private static boolean attention(String type) {
+    public static boolean attention(String type) {
         switch (type) {
             case "PushEvent":
             case "IssueCommentEvent":

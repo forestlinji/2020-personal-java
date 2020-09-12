@@ -17,3 +17,5 @@ gradle-app.setting
 *.json
 
 /testFile1
+
+/testFile2

@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 //        System.out.println("Hello World");
 //        System.out.println(args.length);
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser parser = new DefaultParser();
         Options options = new Options();
         options.addOption("i", "init", true, "init");
         options.addOption("u", "user", true, "user");
@@ -48,7 +48,7 @@ public class Main {
 
 
     private static void init(String path) throws IOException {
-//        long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 //        Thread.sleep(10 * 1000);
         // 获取指定目录下后缀是.json的文件
         File Dir = new File(path);
@@ -115,8 +115,8 @@ public class Main {
         FileUtils.writeStringToFile(new File("out1.json"), s1, "UTF-8");
         FileUtils.writeStringToFile(new File("out2.json"), s2, "UTF-8");
         FileUtils.writeStringToFile(new File("out3.json"), s3, "UTF-8");
-//        long end = System.currentTimeMillis();
-//        System.out.println(end - start);
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
     }
 
 

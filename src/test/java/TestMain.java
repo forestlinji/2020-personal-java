@@ -27,7 +27,7 @@ public class TestMain {
     }
 
     /**
-     * 测试countByUser， 结果：9 0
+     * 测试countByUser， 结果：2 0
      *
      * @throws IOException
      * @throws ParseException
@@ -39,7 +39,7 @@ public class TestMain {
     }
 
     /**
-     * 测试countByRepo， 结果 2 0
+     * 测试countByRepo， 结果 9 0
      *
      * @throws IOException
      * @throws ParseException

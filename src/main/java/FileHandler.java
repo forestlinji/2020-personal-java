@@ -14,6 +14,7 @@ public class FileHandler implements Runnable{
     private File file;
     private CountDownLatch countDownLatch;
 
+
     @Override
     public void run(){
         LineIterator it = null;
@@ -47,6 +48,7 @@ public class FileHandler implements Runnable{
         }
     }
 
+
     /**
      * 根据事件类型更新值
      * @param type 事件类型
@@ -74,6 +76,7 @@ public class FileHandler implements Runnable{
             return value;
         };
     }
+
 
     public FileHandler(File file, CountDownLatch countDownLatch) {
         this.file = file;

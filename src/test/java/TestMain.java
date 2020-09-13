@@ -18,6 +18,7 @@ public class TestMain {
 //        }
     }
 
+
     /**
      * 测试init
      *
@@ -26,8 +27,9 @@ public class TestMain {
      */
     @Test
     public void testInit() throws Exception {
-        Main.main(new String[]{"-i", "C:\\Users\\forestj\\IdeaProjects\\2020-personal-java\\testFile1"});
+        Main.main(new String[]{"--init", "C:\\Users\\forestj\\IdeaProjects\\2020-personal-java\\testFile1"});
     }
+
 
     /**
      * 测试countByUser， 结果：2 0
@@ -41,6 +43,7 @@ public class TestMain {
         Main.main(new String[]{"-u", "kamilskasfaf", "-e", "PushEvent"});
     }
 
+
     /**
      * 测试countByRepo， 结果 9 0
      *
@@ -52,6 +55,7 @@ public class TestMain {
         Main.main(new String[]{"-r", "fujimura/hi", "-e", "PushEvent"});
         Main.main(new String[]{"-r", "fujimura/hisdfdsf", "-e", "PushEvent"});
     }
+
 
     /**
      * 测试countByUserAndRepo， 结果 7 0
@@ -66,11 +70,20 @@ public class TestMain {
 //        UserRepo {user='tschortsch', repo='tschortsch/gulp-bootlint'}":{"IssueCommentEvent":0,"IssuesEvent":0,"PullRequestEvent":0,"PushEvent":7}
     }
 
+
+    /**
+     * 测试异常
+     */
     @Test(expected = FileNotFoundException.class)
     public void testFileHandler(){
         new FileHandler(new File("geag"), new CountDownLatch(1)).run();
     }
 
+
+    /**
+     * 测试异常
+     * @throws Exception
+     */
     @Test(expected = Exception.class)
     public void testPara() throws Exception {
         Main.main(new String[]{"-e", "tschortsch"});

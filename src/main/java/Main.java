@@ -20,8 +20,6 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception {
-//        System.out.println("Hello World");
-//        System.out.println(args.length);
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
         options.addOption("i", "init", true, "init");
@@ -34,7 +32,8 @@ public class Main {
             init(commandLine.getOptionValue("i"));
         } else if (commandLine.hasOption("u") && commandLine.hasOption("e") && commandLine.hasOption("repo")) {
             // 查询每一个人在每一个项目的 4 种事件的数量。
-            int result = countByUserAndRepo(commandLine.getOptionValue("u"), commandLine.getOptionValue("repo"), commandLine.getOptionValue("e"));
+            int result = countByUserAndRepo(commandLine.getOptionValue("u"),
+                                            commandLine.getOptionValue("repo"), commandLine.getOptionValue("e"));
             System.out.println(result);
         } else if (commandLine.hasOption("u") && commandLine.hasOption("e")) {
             // 查询个人的 4 种事件的数量。
@@ -51,8 +50,14 @@ public class Main {
     }
 
 
+    /**
+     * 初始化统计数据
+     * @param path 文件夹路径
+     * @throws IOException
+     * @throws InterruptedException
+     */
     private static void init(String path) throws IOException, InterruptedException {
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         File Dir = new File(path);
 //        获取后缀是json格式的文件列表
         File[] files = Dir.listFiles(file -> file.getName().endsWith(".json"));
@@ -71,8 +76,8 @@ public class Main {
         FileUtils.writeStringToFile(new File("out1.json"), s1, "UTF-8");
         FileUtils.writeStringToFile(new File("out2.json"), s2, "UTF-8");
         FileUtils.writeStringToFile(new File("out3.json"), s3, "UTF-8");
-        long end = System.currentTimeMillis();
-        System.out.println(end - start);
+//        long end = System.currentTimeMillis();
+//        System.out.println(end - start);
     }
 
 

@@ -19,6 +19,11 @@ public class Main {
     static Map<String, Result> map3 = new ConcurrentHashMap<>(); //存放userRepo
 
 
+    /**
+     * 程序的入口类，负责解析参数
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();

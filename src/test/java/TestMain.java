@@ -8,15 +8,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class TestMain {
 
-    @Test
-    public void testPath() {
-//        C:\Users\forestj\IdeaProjects\2020-personal-java\testFile1
-//        File Dir = new File("C:\\Users\\forestj\\IdeaProjects\\2020-personal-java\\testFile1");
-//        File[] files = Dir.listFiles(file -> file.getName().endsWith(".json"));
-//        for (File file : files) {
-//            System.out.println(file.getName());
-//        }
-    }
+
 
 
     /**
@@ -27,7 +19,7 @@ public class TestMain {
      */
     @Test
     public void testInit() throws Exception {
-        Main.main(new String[]{"--init", "C:\\Users\\forestj\\IdeaProjects\\2020-personal-java\\testFile2"});
+        Main.main(new String[]{"--init", "C:\\Users\\forestj\\IdeaProjects\\2020-personal-java\\testFile1"});
     }
 
 
@@ -84,7 +76,7 @@ public class TestMain {
      * 测试异常
      * @throws Exception
      */
-    @Test()
+    @Test
     public void testPara() throws Exception {
         Main.main(new String[]{"-e", "tschortsch"});
 

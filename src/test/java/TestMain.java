@@ -27,7 +27,7 @@ public class TestMain {
      */
     @Test
     public void testInit() throws Exception {
-        Main.main(new String[]{"--init", "C:\\Users\\forestj\\IdeaProjects\\2020-personal-java\\testFile1"});
+        Main.main(new String[]{"--init", "C:\\Users\\forestj\\IdeaProjects\\2020-personal-java\\testFile2"});
     }
 
 

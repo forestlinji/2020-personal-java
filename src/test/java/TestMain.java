@@ -10,7 +10,6 @@ public class TestMain {
 
 
 
-
     /**
      * 测试init
      *
@@ -18,26 +17,31 @@ public class TestMain {
      * @throws ParseException
      */
     @Test
-    public void testInit() throws Exception {
+    public void testInitAndPath() throws Exception {
         Main.main(new String[]{"--init", "C:\\Users\\forestj\\IdeaProjects\\2020-personal-java\\testFile1"});
+        Main.main(new String[]{"-u", "kamilsk", "-e", "PushEvent"});
+        Main.main(new String[]{"-r", "fujimura/hi", "-e", "PushEvent"});
+        Main.main(new String[]{"-u", "tschortsch", "-e", "PushEvent", "--repo", "tschortsch/gulp-bootlint"});
     }
 
 
     /**
-     * 测试countByUser， 结果：2 0
+     * 测试countByUser
      *
      * @throws IOException
      * @throws ParseException
      */
     @Test
     public void testCountByUser() throws Exception {
-        Main.main(new String[]{"-u", "kamilsk", "-e", "PushEvent"});
-        Main.main(new String[]{"-u", "kamilskasfaf", "-e", "PushEvent"});
+        int count = Main.countByUser("kamilsk", "PushEvent");
+        assert count == 2;
+        count = Main.countByUser("kamilskasfaf", "PushEvent");
+        assert count == 0;
     }
 
 
     /**
-     * 测试countByRepo， 结果 9 0
+     * 测试countByRepo
      *
      * @throws IOException
      * @throws ParseException
@@ -45,21 +49,25 @@ public class TestMain {
     @Test
     public void testCountByRepo() throws Exception {
         Main.main(new String[]{"-r", "fujimura/hi", "-e", "PushEvent"});
-        Main.main(new String[]{"-r", "fujimura/hisdfdsf", "-e", "PushEvent"});
+        int count = Main.countByRepo("fujimura/hi", "PushEvent");
+        assert count == 9;
+        count = Main.countByRepo("fujimura/hisdfdsf", "PushEvent");
+        assert count == 0;
     }
 
 
     /**
-     * 测试countByUserAndRepo， 结果 7 0
+     * 测试countByUserAndRepo
      *
      * @throws IOException
      * @throws ParseException
      */
     @Test
     public void testCountByUserAndRepo() throws Exception {
-        Main.main(new String[]{"-u", "tschortsch", "-e", "PushEvent", "--repo", "tschortsch/gulp-bootlint"});
-        Main.main(new String[]{"-u", "tschortsfasfch", "-e", "PushEvent", "--repo", "tschortsch/gulp-bootlint"});
-//        UserRepo {user='tschortsch', repo='tschortsch/gulp-bootlint'}":{"IssueCommentEvent":0,"IssuesEvent":0,"PullRequestEvent":0,"PushEvent":7}
+        int count = Main.countByUserAndRepo("tschortsch", "tschortsch/gulp-bootlint", "PushEvent");
+        assert count == 7;
+        count = Main.countByUserAndRepo("tschortsfdsach", "tschortsch/gulp-bootlint", "PushEvent");
+        assert count == 0;
     }
 
 
@@ -79,7 +87,6 @@ public class TestMain {
     @Test
     public void testPara() throws Exception {
         Main.main(new String[]{"-e", "tschortsch"});
-
     }
 
 }

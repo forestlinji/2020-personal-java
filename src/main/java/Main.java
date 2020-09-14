@@ -62,7 +62,7 @@ public class Main {
      * @throws IOException
      * @throws InterruptedException
      */
-    private static void init(String path) throws IOException, InterruptedException {
+    public static void init(String path) throws IOException, InterruptedException {
 //        long start = System.currentTimeMillis();
         File Dir = new File(path);
 //        获取后缀是json格式的文件列表
@@ -98,7 +98,7 @@ public class Main {
      * @param event 事件类型
      * @throws IOException
      */
-    private static int countByUserAndRepo(String user, String repo, String event) throws IOException {
+    public static int countByUserAndRepo(String user, String repo, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out3.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(user + "_" + repo);
@@ -117,7 +117,7 @@ public class Main {
      * @param event 事件类型
      * @throws IOException
      */
-    private static int countByUser(String user, String event) throws IOException {
+    public static int countByUser(String user, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out1.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(user);
@@ -137,7 +137,7 @@ public class Main {
      * @param event 事件类型
      * @throws IOException
      */
-    private static int countByRepo(String repo, String event) throws IOException {
+    public static int countByRepo(String repo, String event) throws IOException {
         String s = FileUtils.readFileToString(new File("out2.json"), "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(repo);

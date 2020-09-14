@@ -62,7 +62,7 @@ public class Main {
      * @throws InterruptedException
      */
     private static void init(String path) throws IOException, InterruptedException {
-//        long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         File Dir = new File(path);
 //        获取后缀是json格式的文件列表
         File[] files = Dir.listFiles(file -> file.getName().endsWith(".json"));
@@ -81,8 +81,8 @@ public class Main {
         FileUtils.writeStringToFile(new File("out1.json"), s1, "UTF-8");
         FileUtils.writeStringToFile(new File("out2.json"), s2, "UTF-8");
         FileUtils.writeStringToFile(new File("out3.json"), s3, "UTF-8");
-//        long end = System.currentTimeMillis();
-//        System.out.println(end - start);
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
     }
 
 

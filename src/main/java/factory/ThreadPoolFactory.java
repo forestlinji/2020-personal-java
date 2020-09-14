@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
  * 线程池工厂
  */
 public class ThreadPoolFactory {
-    private static final int CORE_POOL_SIZE = 6;    //核心线程数
-    private static final int MAX_POOL_SIZE = 6;     //最大线程数
+    private static final int CORE_POOL_SIZE = 4;    //核心线程数
+    private static final int MAX_POOL_SIZE = 4;     //最大线程数
     private static final int QUEUE_CAPACITY = 1000; //等待队列长度
     private static final Long KEEP_ALIVE_TIME = 1L; //过期时间
 

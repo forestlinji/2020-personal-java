@@ -75,7 +75,7 @@ public class TestMain {
      * 测试异常
      */
     @Test(expected = FileNotFoundException.class)
-    public void testFileHandler(){
+    public void testFileHandler() {
         new FileHandler(new File("geag"), new CountDownLatch(1)).run();
     }
 
@@ -84,9 +84,10 @@ public class TestMain {
      * 测试异常
      * @throws Exception
      */
-    @Test(expected = Exception.class)
+    @Test()
     public void testPara() throws Exception {
         Main.main(new String[]{"-e", "tschortsch"});
 
     }
+
 }

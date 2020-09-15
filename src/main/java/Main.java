@@ -36,22 +36,23 @@ public class Main {
         if (commandLine.hasOption("i")) {
             // 初始化事件
             init(commandLine.getOptionValue("i"));
-        } else if (commandLine.hasOption("u") && commandLine.hasOption("e") && commandLine.hasOption("repo")) {
-            // 查询每一个人在每一个项目的 4 种事件的数量。
-            int result = countByUserAndRepo(commandLine.getOptionValue("u"),
-                                            commandLine.getOptionValue("repo"), commandLine.getOptionValue("e"));
-            System.out.println(result);
-        } else if (commandLine.hasOption("u") && commandLine.hasOption("e")) {
-            // 查询个人的 4 种事件的数量。
-            int result = countByUser(commandLine.getOptionValue("u"), commandLine.getOptionValue("e"));
-            System.out.println(result);
-        } else if (commandLine.hasOption("r") && commandLine.hasOption("e")) {
-            // 查询每一个项目的 4 种事件的数量
-            int result = countByRepo(commandLine.getOptionValue("r"), commandLine.getOptionValue("e"));
-            System.out.println(result);
         } else {
-//            throw new Exception("参数不合法");
-            System.out.println(Runtime.getRuntime().maxMemory() / 1024 / 1024);
+            String user = commandLine.getOptionValue("u");
+            String repo = commandLine.getOptionValue("r");
+            String event = commandLine.getOptionValue("e");
+            if (commandLine.hasOption("u") && commandLine.hasOption("e") && commandLine.hasOption("repo")) {
+                // 查询每一个人在每一个项目的 4 种事件的数量。
+                int result = countByUserAndRepo(user, repo, event);
+                System.out.println(result);
+            } else if (commandLine.hasOption("u") && commandLine.hasOption("e")) {
+                // 查询个人的 4 种事件的数量。
+                int result = countByUser(user, event);
+                System.out.println(result);
+            } else if (commandLine.hasOption("r") && commandLine.hasOption("e")) {
+                // 查询每一个项目的 4 种事件的数量
+                int result = countByRepo(repo, event);
+                System.out.println(result);
+            }
         }
     }
 
@@ -64,6 +65,7 @@ public class Main {
      */
     public static void init(String path) throws IOException, InterruptedException {
 //        long start = System.currentTimeMillis();
+//        Thread.sleep(10*1000);
         File Dir = new File(path);
 //        获取后缀是json格式的文件列表
         File[] files = Dir.listFiles(file -> file.getName().endsWith(".json"));
@@ -86,7 +88,9 @@ public class Main {
         FileUtils.writeStringToFile(new File("out2.json"), s2, "UTF-8");
         FileUtils.writeStringToFile(new File("out3.json"), s3, "UTF-8");
 //        long end = System.currentTimeMillis();
-//        System.out.println(end - start);
+//        System.out.println("used time: "+ (end - start) +" ms");
+//        Thread.sleep(1000*1000);
+
     }
 
 
@@ -99,7 +103,11 @@ public class Main {
      * @throws IOException
      */
     public static int countByUserAndRepo(String user, String repo, String event) throws IOException {
-        String s = FileUtils.readFileToString(new File("out3.json"), "UTF-8");
+        File file = new File("out3.json");
+        if(!file.exists()){
+            throw new FileNotFoundException();
+        }
+        String s = FileUtils.readFileToString(file, "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(user + "_" + repo);
         if (object != null) {
@@ -118,7 +126,11 @@ public class Main {
      * @throws IOException
      */
     public static int countByUser(String user, String event) throws IOException {
-        String s = FileUtils.readFileToString(new File("out1.json"), "UTF-8");
+        File file = new File("out1.json");
+        if(!file.exists()){
+            throw new FileNotFoundException();
+        }
+        String s = FileUtils.readFileToString(file, "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(user);
         if (object != null) {
@@ -138,7 +150,11 @@ public class Main {
      * @throws IOException
      */
     public static int countByRepo(String repo, String event) throws IOException {
-        String s = FileUtils.readFileToString(new File("out2.json"), "UTF-8");
+        File file = new File("out2.json");
+        if(!file.exists()){
+            throw new FileNotFoundException();
+        }
+        String s = FileUtils.readFileToString(file, "UTF-8");
         JSONObject jsonObject = JSONObject.parseObject(s);
         JSONObject object = jsonObject.getJSONObject(repo);
         if (object != null) {

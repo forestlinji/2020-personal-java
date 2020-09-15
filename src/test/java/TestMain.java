@@ -8,8 +8,6 @@ import java.util.concurrent.CountDownLatch;
 
 public class TestMain {
 
-
-
     /**
      * 测试init
      *
@@ -48,7 +46,6 @@ public class TestMain {
      */
     @Test
     public void testCountByRepo() throws Exception {
-        Main.main(new String[]{"-r", "fujimura/hi", "-e", "PushEvent"});
         int count = Main.countByRepo("fujimura/hi", "PushEvent");
         assert count == 9;
         count = Main.countByRepo("fujimura/hisdfdsf", "PushEvent");
